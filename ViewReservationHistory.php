@@ -12,16 +12,15 @@ if (isset($_GET['CustomerID'])) {
 		exit();
 	}
 
-	if ($query = $conn->prepare('SELECT * FROM Purchase WHERE customer_id=? ORDER BY purchase_id DESC LIMIT 10'))
+	if ($query = $conn->prepare('SELECT * FROM Reservation WHERE customer_id=? ORDER BY reservation_id DESC LIMIT 10'))
 	{
 		$query->bind_param('i', $customer_id);
 		$query->execute();
-		$query->bind_result($purchase_id,
-							$cost,
-							$start_date,
-							$end_date,
-							$room_id,
-							$customer_id);
+		$query->bind_result($reservation_id,
+							$start_datetime,
+							$end_datetime,
+							$customer_id,
+							$room_id);
 		
 		$query->store_result();
 		$resultRows = $query->num_rows;
@@ -30,12 +29,11 @@ if (isset($_GET['CustomerID'])) {
 			while ($query->fetch()) {
 				if ($output != '')
 					$output .= ',';
-				$output .= '{"PurchaseID":"'  . $purchase_id . '",';
-				$output .= '"Cost":"'   . $cost        . '",';
-				$output .= '"StartDate":"'. $start_date     . '",'; 
-				$output .= '"EndDate":"'. $end_date     . '",'; 
-				$output .= '"RoomID":"'. $room_id     . '",'; 
-				$output .= '"CustomerID":"'. $customer_id     . '"}'; 
+				$output .= '{"ReservationID":"'  . $reservation_id . '",';
+				$output .= '"StartDateTime":"'  . $start_datetime . '",';
+				$output .= '"EndDateTime":"'  . $end_datetime . '",';
+				$output .= '"CustomerID":"'. $customer_id     . '",'; 
+				$output .= '"RoomID":"'. $room_id     . '"}'; 
 			}
 		}
 	}
